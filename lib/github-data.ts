@@ -1,4 +1,13 @@
-import type { ProjectItem } from '@/lib/portfolio-data'
+import type { ProjectItem, WorkItem } from '@/lib/portfolio-data'
+
+export type PortfolioContent = {
+  profile: typeof import('@/lib/portfolio-data').profile
+  skills: { label: string; items: string[] }[]
+  work: WorkItem[]
+  learning: string[]
+  achievements: string[]
+  links: { label: string; value: string; href: string }[]
+}
 
 type GitHubRepository = {
   id: number
@@ -14,7 +23,18 @@ type GitHubRepository = {
 }
 
 const GITHUB_USERNAME = 'kiranchaudhary537'
+const GITHUB_CONTENT_URL = process.env.GITHUB_CONTENT_URL ?? 'https://raw.githubusercontent.com/Kiranchaudhary537/portfolio/main/data/portfolio.json'
 const ONE_DAY = 60 * 60 * 24
+
+export async function getPortfolioContent(): Promise<PortfolioContent | null> {
+  const response = await fetch(GITHUB_CONTENT_URL, {
+    next: { revalidate: ONE_DAY },
+    headers: { Accept: 'application/json' },
+  })
+
+  if (!response.ok) return null
+  return (await response.json()) as PortfolioContent
+}
 
 export async function getGitHubProjects(): Promise<ProjectItem[]> {
   const response = await fetch(

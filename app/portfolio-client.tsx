@@ -2,13 +2,15 @@
 
 import { useEffect, useState } from 'react'
 import { ArrowUpRight, Menu, Terminal, X } from 'lucide-react'
-import { achievements, learning, links, navItems, profile, skills, work, type NavItem, type ProjectItem } from '@/lib/portfolio-data'
+import { navItems, type NavItem, type ProjectItem } from '@/lib/portfolio-data'
+import type { PortfolioContent } from '@/lib/github-data'
 
 function SectionLabel({ index, children }: { index: string; children: React.ReactNode }) {
   return <div className="section-label"><span>{index}</span><span>{children}</span></div>
 }
 
-export default function PortfolioClient({ projects }: { projects: ProjectItem[] }) {
+export default function PortfolioClient({ projects, content }: { projects: ProjectItem[]; content: PortfolioContent }) {
+  const { profile, skills, work, learning, achievements, links } = content
   const [active, setActive] = useState<NavItem>('home')
   const [menuOpen, setMenuOpen] = useState(false)
 
